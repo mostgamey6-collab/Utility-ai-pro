@@ -1,8 +1,14 @@
-// --- PART 1: THE WAITLIST & TRANSITION ---
+// --- PART 1: THE WAITLIST, TRANSITION & MEMORY ---
 const form = document.querySelector("form");
 const button = document.querySelector("button[type='submit']");
 const waitlistSection = document.getElementById("waitlist-section");
 const chatSection = document.getElementById("chat-section");
+
+// THE MEMORY CHECK: If they already logged in before, skip the waitlist entirely!
+if (localStorage.getItem('utilityAI_access') === 'granted') {
+    waitlistSection.style.display = "none";
+    chatSection.style.display = "flex"; // Changed to flex to match your new CSS
+}
 
 form.addEventListener("submit", async (e) => {
   e.preventDefault(); 
@@ -19,8 +25,11 @@ form.addEventListener("submit", async (e) => {
     });
 
     if (response.ok) {
+      // THE MEMORY SAVE: Lock their VIP pass into the browser
+      localStorage.setItem('utilityAI_access', 'granted');
+      
       waitlistSection.style.display = "none";
-      chatSection.style.display = "block"; 
+      chatSection.style.display = "flex"; 
     } else {
       button.innerText = "Error. Try again.";
       button.disabled = false;
@@ -51,7 +60,6 @@ aiSendBtn.addEventListener('click', async () => {
     document.getElementById(loaderId).scrollIntoView({ behavior: 'smooth' });
 
     try {
-        // THE SECURITY UPGRADE: Talking to our Netlify Bouncer instead of Google directly!
         const response = await fetch(`/.netlify/functions/bouncer`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },

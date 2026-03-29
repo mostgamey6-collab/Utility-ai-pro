@@ -1,7 +1,7 @@
 // --- PART 1: LOGIN MEMORY & TRANSITION ---
 const form = document.querySelector("form");
 const waitlistSection = document.getElementById("waitlist-section");
-const appLayout = document.getElementById("app-layout"); // Updated for new layout
+const appLayout = document.getElementById("app-layout"); 
 
 if (localStorage.getItem('utilityAI_access') === 'granted') {
     waitlistSection.style.display = "none";
@@ -14,14 +14,12 @@ if (form) {
       e.preventDefault(); 
       button.disabled = true;
       button.innerText = "Authenticating...";
-
       try {
         const response = await fetch(form.action, {
           method: "POST",
           body: new FormData(form),
           headers: { 'Accept': 'application/json' }
         });
-
         if (response.ok) {
           localStorage.setItem('utilityAI_access', 'granted');
           waitlistSection.style.display = "none";
@@ -37,6 +35,23 @@ if (form) {
     });
 }
 
+// --- PART 1.5: THE BLUR MENU LOGIC ---
+const menuBtn = document.getElementById('mobile-menu-btn');
+const sidebar = document.getElementById('mobile-sidebar');
+const overlay = document.getElementById('sidebar-overlay'); // The new frosted glass
+
+// Open menu AND fade in blur
+menuBtn.addEventListener('click', () => {
+    sidebar.classList.add('active');
+    overlay.classList.add('active');
+});
+
+// Tap the blur to close everything smoothly
+overlay.addEventListener('click', () => {
+    sidebar.classList.remove('active');
+    overlay.classList.remove('active');
+});
+
 // --- PART 2: THE SECURE AI TERMINAL ---
 const aiInput = document.getElementById('ai-input');
 const aiSendBtn = document.getElementById('ai-send');
@@ -45,7 +60,6 @@ const intensitySlider = document.getElementById('intensity');
 const intensityLabel = document.getElementById('intensity-label');
 const shareBtn = document.getElementById('share-chat-btn');
 
-// Intensity Slider Logic
 intensitySlider.addEventListener('input', (e) => {
     const val = e.target.value;
     if (val == 1) intensityLabel.innerText = "Brief";
@@ -53,7 +67,6 @@ intensitySlider.addEventListener('input', (e) => {
     else intensityLabel.innerText = "In-Depth";
 });
 
-// The Share Button (Copies last AI response to clipboard)
 shareBtn.addEventListener('click', () => {
     const allAiMessages = document.querySelectorAll('.msg-ai');
     if (allAiMessages.length > 1) {
@@ -65,7 +78,6 @@ shareBtn.addEventListener('click', () => {
     }
 });
 
-// The Send Logic
 aiSendBtn.addEventListener('click', sendInquiry);
 aiInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendInquiry(); });
 
@@ -73,16 +85,13 @@ async function sendInquiry() {
     const userText = aiInput.value;
     if (!userText) return;
 
-    // Add User Message to UI
     aiOutput.innerHTML += `<div class="msg-bubble msg-user">${userText}</div>`;
     aiInput.value = ''; 
     
-    // Add Spinner
     const loaderId = 'loader-' + Date.now();
     aiOutput.innerHTML += `<div id="${loaderId}" class="msg-bubble msg-ai"><div class="spinner"></div> Analyzing...</div>`;
     document.getElementById(loaderId).scrollIntoView({ behavior: 'smooth' });
 
-    // Read the Intensity Slider to change the AI Persona!
     let detailInstruction = "Give a standard, balanced response.";
     if (intensitySlider.value == 1) detailInstruction = "Be extremely brief. Only give the raw attachments, no extra talking or explanations.";
     if (intensitySlider.value == 3) detailInstruction = "Be highly detailed. Explain exactly why you chose each attachment and how it affects recoil, ADS speed, and movement.";

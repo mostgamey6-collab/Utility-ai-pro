@@ -8,25 +8,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <div class="container" id="waitlist-section">
-        <h1>Utility AI</h1>
-        <p>Level up your CODM gameplay. Get god-tier loadouts and professional tactics.</p>
-        <form action="https://formspree.io/f/mvzvovke" method="POST">
-            <input type="email" name="email" placeholder="Enter your email address" required>
-            <button type="submit">Join</button>
-        </form>
-    </div>
-
-    <div id="app-layout" style="display: none;">
-        
+    <div id="app-layout">
         <nav class="sidebar" id="mobile-sidebar">
             <h2>Utility AI</h2>
-            <button id="new-chat-btn">+ New Intel</button>
+            <button id="new-chat-btn">+ New Chat</button>
             <div class="history-label">Recent Operations</div>
-            <ul id="history-list">
-                <li class="history-item">Ghost Placeholder 1</li>
-                <li class="history-item">Ghost Placeholder 2</li>
-            </ul>
+            <ul id="history-list"></ul>
+            
+            <button id="clear-history-btn" style="margin-top: auto; background: transparent; border: 1px solid var(--border-color); color: var(--text-color); padding: 10px; border-radius: 8px; cursor: pointer; font-weight: bold;">🗑️ Clear History</button>
         </nav>
 
         <div id="sidebar-overlay"></div>
@@ -39,8 +28,8 @@
                 
                 <div class="intensity-control">
                     <label for="intensity">Detail:</label>
-                    <input type="range" id="intensity" min="1" max="3" value="2">
-                    <span id="intensity-label">Normal</span>
+                    <input type="range" id="intensity" min="0" max="100" value="50" step="1">
+                    <span id="intensity-label">50% (Normal)</span>
                 </div>
                 
                 <button id="share-chat-btn" title="Share Intel">
@@ -49,14 +38,16 @@
             </header>
 
             <div id="ai-output">
-                <div class="msg-bubble msg-ai">> System Online. Awaiting tactical inquiry...</div>
+                <div class="msg-bubble msg-ai">⚡ Utility AI Online. Ready for loadouts, tactics, or CODM intel.</div>
             </div>
 
             <div class="input-wrapper">
-                <button id="attach-btn" title="Upload Image (Coming Soon)">
+                <input type="file" id="image-upload" accept="image/png, image/jpeg, image/webp" style="display: none;">
+                
+                <button id="attach-btn" title="Attach Screenshot">
                     <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M19,13H13V19H11V13H5V11H11V5H13V11H19V13Z" /></svg>
                 </button>
-                <input type="text" id="ai-input" placeholder="Ask for a loadout or tactic...">
+                <input type="text" id="ai-input" placeholder="Ask anything about CODM...">
                 <button id="ai-send" title="Send">
                     <svg viewBox="0 0 24 24" width="24" height="24"><path fill="currentColor" d="M2,21L23,12L2,3V10L17,12L2,14V21Z" /></svg>
                 </button>

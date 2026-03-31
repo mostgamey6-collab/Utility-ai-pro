@@ -33,9 +33,7 @@ function loadSession(sessionId) {
     }
     
     aiOutput.scrollTop = aiOutput.scrollHeight;
-    if(window.innerWidth <= 768) {
-        sidebar.classList.remove('active'); overlay.classList.remove('active');
-    }
+    if(window.innerWidth <= 768) { sidebar.classList.remove('active'); overlay.classList.remove('active'); }
 }
 
 function updateHistoryUI() {
@@ -91,7 +89,7 @@ intensitySlider.addEventListener('input', (e) => {
     intensityLabel.innerText = `${val}%${labelTxt}`;
 });
 
-// --- PART 4: THE AI MULTIMODAL ENGINE ---
+// --- PART 4: THE AI ENGINE ---
 aiSendBtn.addEventListener('click', sendInquiry);
 aiInput.addEventListener('keypress', (e) => { if (e.key === 'Enter') sendInquiry(); });
 
@@ -110,9 +108,7 @@ async function sendInquiry() {
     let userDisplayHtml = userText;
     if (selectedImageBase64) userDisplayHtml = `📸 [Image Attached] <br>` + userText;
     
-    // We grab the past messages to send as memory BEFORE we add the new one!
     const pastMemoryToPropagate = [...session.messages]; 
-
     session.messages.push({ role: 'user', content: userDisplayHtml });
     saveDatabase();
 
@@ -135,11 +131,15 @@ async function sendInquiry() {
                 systemInstruction: persona,
                 userInquiry: userText || "Analyze this image.",
                 imageData: selectedImageBase64,
-                chatHistory: pastMemoryToPropagate // Sending the AI its memory!
+                chatHistory: pastMemoryToPropagate 
             })
         });
 
-        if (!response.ok) throw new Error("Server error.");
+        // THE RADAR FIX: Look directly at the error data!
+        if (!response.ok) {
+            const errData = await response.json();
+            throw new Error(errData.error || "Server connection failed.");
+        }
 
         const data = await response.json();
         const rawText = data.candidates[0].content.parts[0].text;
@@ -153,8 +153,9 @@ async function sendInquiry() {
         saveDatabase();
 
     } catch (error) {
+        // Now it prints the exact reason it crashed!
         const loaderEl = document.getElementById(loaderId);
-        if(loaderEl) loaderEl.outerHTML = `<div class="msg-bubble msg-ai" style="color: red;">Connection lost. Try asking again.</div>`;
+        if(loaderEl) loaderEl.outerHTML = `<div class="msg-bubble msg-ai" style="color: red;"><strong>System Error:</strong> ${error.message}</div>`;
     } finally {
         aiSendBtn.disabled = false;
         selectedImageBase64 = null;

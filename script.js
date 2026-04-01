@@ -124,7 +124,7 @@ async function sendInquiry() {
     const persona = `You are Utility AI, an elite Call of Duty: Mobile expert and coach. Answer exactly what the user asks. ${detailInstruction}`;
 
     try {
-        const response = await fetch(`/.netlify/functions/bouncer`, {
+        const response = await fetch('/api/bouncer', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({

@@ -1,19 +1,13 @@
-/* --- VARIABLES & RESET --- */
 :root {
-    --primary-color: #2563eb;
-    --primary-hover: #1d4ed8;
     --bg-dark: #0f172a;
-    --bg-panel: #1e293b;
+    --sidebar-bg: #1e293b;
+    --primary-color: #3b82f6;
     --text-light: #f8fafc;
     --text-muted: #94a3b8;
-    --icon-color: #cbd5e1;
 }
 
-* { box-sizing: border-box; }
-
-/* --- DYNAMIC BACKGROUND --- */
 body {
-    font-family: 'Inter', -apple-system, sans-serif;
+    font-family: 'Inter', sans-serif;
     margin: 0;
     padding: 0;
     background: linear-gradient(45deg, #0b0f19, #1a233a, #0b0f19, #202b46);
@@ -30,6 +24,7 @@ body {
     50% { background-position: 100% 50%; }
     100% { background-position: 0% 50%; }
 }
+
 
 /* --- SIDEBAR --- */
 #mobile-sidebar {
